@@ -150,7 +150,7 @@ const StaticAnalysis = () => {
 
           {/* Progress Bar */}
           <div className="relative w-full bg-gray-200 rounded-full h-2 mb-4">
-            <div 
+            <div
               className="bg-blue-500 h-2 rounded-full transition-all duration-500"
               style={{ width: `${progress}%` }}
             />
@@ -163,13 +163,13 @@ const StaticAnalysis = () => {
 
           {/* Control Buttons */}
           <div className="flex justify-end gap-4">
-            <button 
+            <button
               className="px-4 py-2 bg-red-400 text-white rounded-full"
               onClick={abortAnalysis}
             >
               Abort Analysis
             </button>
-            <button 
+            <button
               className="px-4 py-2 bg-blue-500 text-white rounded-full"
               onClick={resumeAnalysis}
             >
@@ -220,7 +220,7 @@ const StaticAnalysis = () => {
         <div className="mt-6 space-y-4">
           {/* File Hash Verification */}
           <label className="flex items-center gap-2 text-gray-700">
-            <input 
+            <input
               type="checkbox"
               checked={permissions.verifyHashes}
               onChange={() => handlePermissionChange('verifyHashes')}
@@ -253,7 +253,7 @@ const StaticAnalysis = () => {
 
           {/* Other Permissions */}
           <label className="flex items-center gap-2 text-gray-700">
-            <input 
+            <input
               type="checkbox"
               checked={permissions.codeDuplication}
               onChange={() => handlePermissionChange('codeDuplication')}
@@ -263,7 +263,7 @@ const StaticAnalysis = () => {
           </label>
 
           <label className="flex items-center gap-2 text-gray-700">
-            <input 
+            <input
               type="checkbox"
               checked={permissions.cyclomaticComplexity}
               onChange={() => handlePermissionChange('cyclomaticComplexity')}
@@ -273,7 +273,7 @@ const StaticAnalysis = () => {
           </label>
 
           <label className="flex items-center gap-2 text-gray-700">
-            <input 
+            <input
               type="checkbox"
               checked={permissions.securityStandards}
               onChange={() => handlePermissionChange('securityStandards')}

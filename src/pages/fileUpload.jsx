@@ -6,6 +6,19 @@ const FileUpload = () => {
   const [file, setFile] = useState(null);
   const [showNotification, setShowNotification] = useState(false);
   const navigate = useNavigate();
+  const [isDynamicAnalysis, setIsDynamicAnalysis] = useState(false);
+
+  const handleButtonClick = (e) => {
+    if (!isDynamicAnalysis) {
+      setIsDynamicAnalysis(true);
+      setTimeout(() => {
+        setIsDynamicAnalysis(false);
+      }, 2000);
+    }
+
+    // Hide the notification after 2 seconds
+
+  };
 
   // Function to handle button click
   const handleClick = (path) => {
@@ -96,8 +109,8 @@ const FileUpload = () => {
               </div>
             </div>
           ) : (
-            <span className="cursor-pointer w-full border-2 border-dashed border-blue-300 rounded-lg p-8 mx-4 flex flex-col items-center justify-center gap-4 bg-gray-50 hover:bg-gray-100 transition">
-              <Upload className="h-8 w-8 text-gray-500" />
+            <span className="cursor-pointer w-full border-2 border-dashed border-blue-300 rounded-lg p-4 mx-4 flex flex-col items-center justify-center gap-4 bg-gray-50 hover:bg-gray-100 transition">
+              <Upload className="h-8 w-5 text-gray-500" />
               <p className="text-blue-500">Drag or Upload Patch File</p>
             </span>
           )}
@@ -108,31 +121,45 @@ const FileUpload = () => {
       <div className="mt-10 pt-5 pb-8 w-full shadow-[0_-5px_10px_rgba(0,0,0,0.1)] flex items-end justify-end">
         <div className="flex w-full gap-4 justify-end relative pr-10">
           {/* Buttons */}
-          <button
-            onClick={() => handleClick("/analytics/static-analysis")}
-            className="px-5 py-3 text-white rounded-3xl transition bg-red-500 hover:bg-red-600"
-          >
-            Dynamic Analysis
-          </button>
 
-          <button
-            onClick={() => handleClick("/analytics/static-analysis")}
-            className="px-5 py-3 text-white rounded-3xl transition bg-blue-700 hover:bg-blue-800"
-          >
-            Static Analysis
-          </button>
+          <div className="flex  items-center gap-2">
+            {isDynamicAnalysis && (
+              <div className=" absolute -top-10 bg-gray-800 text-white text-sm py-2 px-4 rounded-lg shadow-lg animate-fade-in">
+                Work in Progress...
+              </div>
+            )}
+            <button
+              onClick={handleButtonClick}
+              className="px-5 py-3 text-white rounded-3xl transition bg-red-500 hover:bg-red-600"
+            >
+              Dynamic Analysis
+            </button>
+            </div >
 
-          {/* Notification Pop-up */}
-          {showNotification && (
-            <div className="absolute -top-10 right-0 bg-gray-800 text-white text-sm py-2 px-4 rounded-lg shadow-lg animate-fade-in">
-              Please upload a file first!
-            </div>
-          )}
+
+
+
+
+            <button
+              onClick={() => handleClick("/analytics/static-analysis")}
+              className="px-5 py-3 text-white rounded-3xl transition bg-blue-700 hover:bg-blue-800"
+            >
+              Static Analysis
+            </button>
+
+            {/* Notification Pop-up */}
+            {showNotification && (
+              <div className="absolute -top-10 right-0 bg-gray-800 text-white text-sm py-2 px-4 rounded-lg shadow-lg animate-fade-in">
+                Please upload a file first!
+              </div>
+            )}
+
+
+          </div>
         </div>
-      </div>
 
-    </div>
-  );
+      </div>
+      );
 };
 
-export default FileUpload;
+      export default FileUpload;
