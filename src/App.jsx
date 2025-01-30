@@ -13,7 +13,7 @@ import Dashboard from './pages/Dashboard';
 import OSICM  from './pages/osicm';
 import PatchAnalysis from './pages/fileUpload';
 import StaticAnalysis from './pages/staticAnalysis';
-
+import FileTable from './pages/fileTable';
 function App() {
   const [count, setCount] = useState(0);
 
@@ -27,6 +27,7 @@ function App() {
         <Route path="/analytics/patch-analysis" element={<PatchAnalysis />} />
         <Route path="/analytics/static-analysis" element={<StaticAnalysis/>} />
         <Route path="/reports" element={<Reports />} />
+        <Route path="/reports/file-table" element={<FileTable />} />
         <Route path="/configurations" element={<Configurations />} />
         <Route path="/inferences" element={<Inferences />} />
         <Route path="/device-management" element={<DeviceManagement />} />

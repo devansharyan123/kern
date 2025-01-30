@@ -3,6 +3,7 @@
 
 import React, { useState, useEffect } from "react";
 import { FileImage } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const StaticAnalysis = () => {
   // State definitions
@@ -38,6 +39,7 @@ const StaticAnalysis = () => {
       url: "https://dl.google.com/mdt/serving/rubbidium-adverices-ui-ota-starings/4625/53d07be6dd647ede9gjk64kdncb7"
     }
   ]);
+  const navigate = useNavigate();
 
   // Image upload handler
   const handleImageUpload = (event) => {
@@ -116,7 +118,8 @@ const StaticAnalysis = () => {
             <div className="text-center">
               <img src="https://res.cloudinary.com/dwwbx27ts/image/upload/v1738242590/Online_report-rafiki_1_zis5mj.jpg" alt="Analysis completed" className="mx-auto mb-4" />
               <h2 className="text-2xl font-semibold mb-4">Patch Analysis completed!</h2>
-              <button className="px-4 py-2 bg-blue-500 text-white rounded-full">
+              <button className="px-4 py-2 bg-blue-500 text-white rounded-full"
+             >
                 View Reports
               </button>
             </div>
@@ -124,6 +127,7 @@ const StaticAnalysis = () => {
         </div>
       );
     }
+    
 
     return (
       <div className="flex flex-col min-h-screen p-6 shadow-lg">

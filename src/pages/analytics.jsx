@@ -247,39 +247,60 @@ const AnalysisDashboard = ({ data = null }) => {
 
     const navigate = useNavigate();
 
-    //console.log(activeData.totalAnalysis?.count);
+    if (loading) {
+        return <div className="p-6">Loading...</div>;
+    }
 
-    return activeData ? (
+    if (error) {
+        return <div className="p-6 text-red-500">Error loading data: {error.message}</div>;
+    }
+
+    // Ensure we have valid data or use defaults
+    const totalAnalysis = activeData?.totalAnalysis || {
+        count: 0,
+        growth: 0,
+        trend: Array(7).fill().map((_, i) => ({ value: 0 }))
+    };
+
+    const vulnerabilities = activeData?.vulnerabilities || {
+        count: 0,
+        growth: 0,
+        trend: Array(7).fill().map((_, i) => ({ value: 0 }))
+    };
+
+    const analysisOverview = activeData?.analysisOverview || [];
+    const integrityFailure = activeData?.integrityFailure || [];
+    const devicesList = activeData?.devicesList || [];
+
+    return (
         <div className="p-6 bg-gray-50 min-h-screen">
-            {/* Stats Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
                 <StatCard
                     title="Total Analysis Performed"
-                    count={activeData.totalAnalysis.count || 0}
-
-                    growth={activeData.totalAnalysis.growth}
-                    trend={activeData.totalAnalysis.trend}
+                    count={totalAnalysis.count}
+                    growth={totalAnalysis.growth}
+                    trend={totalAnalysis.trend}
                     chartColor="#22c55e"
                 />
                 <StatCard
                     title="Vulnerabilities Found"
-                    count={activeData.vulnerabilities.count || 0}
-                    growth={activeData.vulnerabilities.growth || 0}
-                    trend={activeData.vulnerabilities.trend || []}
+                    count={vulnerabilities.count}
+                    growth={vulnerabilities.growth}
+                    trend={vulnerabilities.trend}
                     chartColor="#ef4444"
                 />
                 <DonutChart
-                    data={activeData.analysisOverview}
+                    data={analysisOverview}
                     title="Analysis Overview"
-                    totalLabel="312"
+                    totalLabel={analysisOverview.reduce((sum, item) => sum + item.value, 0).toString()}
                 />
                 <DonutChart
-                    data={activeData.integrityFailure}
+                    data={integrityFailure}
                     title="Integrity Failure"
-                    totalLabel="52"
+                    totalLabel={integrityFailure.reduce((sum, item) => sum + item.value, 0).toString()}
                 />
             </div>
-    
+
             {/* Devices Table Section */}
             <div className="bg-white rounded-xl shadow-sm">
                 <div className="p-6 border-b border-gray-100">
@@ -323,7 +344,7 @@ const AnalysisDashboard = ({ data = null }) => {
                         </div>
                     </div>
                 </div>
-    
+
                 <div className="overflow-x-auto">
                     <table className="w-full">
                         <thead className="bg-gray-50">
@@ -339,20 +360,19 @@ const AnalysisDashboard = ({ data = null }) => {
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-200">
-                            {activeData.devicesList.map((device) => (
+                            {devicesList.map((device) => (
                                 <tr key={device.id} className="hover:bg-gray-50">
                                     <td className="px-6 py-4 text-sm text-gray-500">{device.id}</td>
                                     <td className="px-6 py-4 text-sm font-medium text-gray-900">{device.patchName}</td>
                                     <td className="px-6 py-4 text-sm text-gray-500">{device.impactScore}</td>
                                     <td className="px-6 py-4 text-sm">
                                         <span
-                                            className={`px-2 py-1 rounded-full text-xs ${
-                                                device.status === 'Running'
-                                                    ? 'bg-green-100 text-green-800'
-                                                    : device.status === 'Failed'
+                                            className={`px-2 py-1 rounded-full text-xs ${device.status === 'Running'
+                                                ? 'bg-green-100 text-green-800'
+                                                : device.status === 'Failed'
                                                     ? 'bg-red-100 text-red-800'
                                                     : 'bg-gray-100 text-gray-800'
-                                            }`}
+                                                }`}
                                         >
                                             {device.status}
                                         </span>
@@ -368,11 +388,7 @@ const AnalysisDashboard = ({ data = null }) => {
                 </div>
             </div>
         </div>
-    ) : (
-        <div>Loading...</div> // This part renders when activeData is not yet available
-    )
-    
+    );
 };
-
 
 export default AnalysisDashboard;
