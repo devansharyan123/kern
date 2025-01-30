@@ -10,6 +10,7 @@ import Configurations from './pages/configurations';
 import Inferences from './pages/inferences';
 import DeviceManagement from './pages/deviceManagement';
 import Dashboard from './pages/Dashboard';
+import OSICM  from './pages/osicm';
 
 function App() {
   const [count, setCount] = useState(0);
@@ -18,6 +19,7 @@ function App() {
   const router = createBrowserRouter(
     createRoutesFromElements(
       <Route path="/" element={<Layout />}>
+          <Route path='' element={<OSICM/>} />
         <Route path="/home" element={<Home />} />
         <Route path="/analytics" element={<Analytics />} />
         <Route path="/reports" element={<Reports />} />
