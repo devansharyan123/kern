@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { LineChart, Line, PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
 import { Search, Plus, Settings, Download, MoreHorizontal } from 'lucide-react';
+import axios from 'axios';
 import { useNavigate } from "react-router-dom";
 
 const AnalysisDashboard = ({ data = null }) => {
@@ -16,6 +17,7 @@ const AnalysisDashboard = ({ data = null }) => {
             growth: 19,
             trend: Array(7).fill().map((_, i) => ({ value: 250 + Math.random() * 100 }))
         },
+
         analysisOverview: [
             { name: 'Un-Secured Patches', value: 140, color: '#2563eb' },
             { name: 'Integrity Failure', value: 92, color: '#8b5cf6' },
@@ -130,10 +132,34 @@ const AnalysisDashboard = ({ data = null }) => {
         ]
     };
 
-    // Use provided data or fall back to default data
-    const activeData = data || defaultData;
+    const [fetchedData, setFetchedData] = useState(defaultData);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    // Function to fetch data from backend with error handling
+    const fetchData = async () => {
+        try {
+            const response = await axios.get("http://127.0.0.1:5000/analyze");
+            if (response.data) {
+                setFetchedData(response.data);
+            }
+        } catch (error) {
+            console.error("Error fetching data:", error);
+            setError(error);
+            setFetchedData(defaultData);
+        } finally {
+            setLoading(false);
+        }
+    };
+    // useEffect with a valid dependency array
+    useEffect(() => {
+        fetchData(); // Fetch data when component mounts or data changes
+    }, [data]);
+
+    const activeData = fetchedData || defaultData;
     const [sortConfig, setSortConfig] = useState(null);
     const [searchTerm, setSearchTerm] = useState('');
+    console.log(activeData);
 
     // Sort function for the table
     const sortData = (key) => {
@@ -147,7 +173,7 @@ const AnalysisDashboard = ({ data = null }) => {
 
     // Render stat card with chart
     const StatCard = ({ title, count, growth, trend, chartColor }) => (
-        <div className="bg-white rounded-xl p-6 shadow-sm">
+        <div className="bg-white rounded-xl p-6 shadow-sm ">
             <div className="flex items-center gap-2 mb-4">
                 <div className="p-2 bg-blue-100 rounded-lg">
                     <Settings className="w-5 h-5 text-blue-600" />
@@ -167,7 +193,7 @@ const AnalysisDashboard = ({ data = null }) => {
                             dataKey="value"
                             stroke={chartColor}
                             strokeWidth={2}
-                            dot={false}
+                            dot={true}
                         />
                     </LineChart>
                 </ResponsiveContainer>
@@ -196,7 +222,7 @@ const AnalysisDashboard = ({ data = null }) => {
                         >
                             {data.map((entry, index) => (
                                 <Cell key={`cell-${index}`} fill={entry.color} />
-                            ))}
+                            )) || []}
                         </Pie>
                     </PieChart>
                 </ResponsiveContainer>
@@ -221,23 +247,25 @@ const AnalysisDashboard = ({ data = null }) => {
 
     const navigate = useNavigate();
 
+    //console.log(activeData.totalAnalysis?.count);
 
-    return (
+    return activeData ? (
         <div className="p-6 bg-gray-50 min-h-screen">
             {/* Stats Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
                 <StatCard
                     title="Total Analysis Performed"
-                    count={activeData.totalAnalysis.count}
+                    count={activeData.totalAnalysis.count || 0}
+
                     growth={activeData.totalAnalysis.growth}
                     trend={activeData.totalAnalysis.trend}
                     chartColor="#22c55e"
                 />
                 <StatCard
                     title="Vulnerabilities Found"
-                    count={activeData.vulnerabilities.count}
-                    growth={activeData.vulnerabilities.growth}
-                    trend={activeData.vulnerabilities.trend}
+                    count={activeData.vulnerabilities.count || 0}
+                    growth={activeData.vulnerabilities.growth || 0}
+                    trend={activeData.vulnerabilities.trend || []}
                     chartColor="#ef4444"
                 />
                 <DonutChart
@@ -251,7 +279,7 @@ const AnalysisDashboard = ({ data = null }) => {
                     totalLabel="52"
                 />
             </div>
-
+    
             {/* Devices Table Section */}
             <div className="bg-white rounded-xl shadow-sm">
                 <div className="p-6 border-b border-gray-100">
@@ -295,7 +323,7 @@ const AnalysisDashboard = ({ data = null }) => {
                         </div>
                     </div>
                 </div>
-
+    
                 <div className="overflow-x-auto">
                     <table className="w-full">
                         <thead className="bg-gray-50">
@@ -317,10 +345,15 @@ const AnalysisDashboard = ({ data = null }) => {
                                     <td className="px-6 py-4 text-sm font-medium text-gray-900">{device.patchName}</td>
                                     <td className="px-6 py-4 text-sm text-gray-500">{device.impactScore}</td>
                                     <td className="px-6 py-4 text-sm">
-                                        <span className={`px-2 py-1 rounded-full text-xs ${device.status === 'Running' ? 'bg-green-100 text-green-800' :
-                                            device.status === 'Failed' ? 'bg-red-100 text-red-800' :
-                                                'bg-gray-100 text-gray-800'
-                                            }`}>
+                                        <span
+                                            className={`px-2 py-1 rounded-full text-xs ${
+                                                device.status === 'Running'
+                                                    ? 'bg-green-100 text-green-800'
+                                                    : device.status === 'Failed'
+                                                    ? 'bg-red-100 text-red-800'
+                                                    : 'bg-gray-100 text-gray-800'
+                                            }`}
+                                        >
                                             {device.status}
                                         </span>
                                     </td>
@@ -335,7 +368,11 @@ const AnalysisDashboard = ({ data = null }) => {
                 </div>
             </div>
         </div>
-    );
+    ) : (
+        <div>Loading...</div> // This part renders when activeData is not yet available
+    )
+    
 };
+
 
 export default AnalysisDashboard;
