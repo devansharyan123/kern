@@ -6,7 +6,7 @@ const Navbar = () => {
     return (
         <div >
             {/* Left Section */}
-            <div className="flex   space-x-4 bg-gray-900 text-white justify-between py-3 px-2">
+            <div className="flex   space-x-4 bg-gray-800 text-white justify-between py-3 px-2">
                 <div className="flex space-x-4 justify-start items-center ">
                     <img
                         src="https://res.cloudinary.com/dwwbx27ts/image/upload/v1738206603/Defence_Research_and_Development_Organisation_Logo_1_kpwb6v.jpg" // Replace with your logo URL
@@ -22,7 +22,7 @@ const Navbar = () => {
             </div>
 
             {/* Middle Section (Navigation Links) */}
-            <div className="flex space-x-6 items-center justify-center bg-gray-950 text-white  ">
+            <div className="flex space-x-6 items-center justify-center bg-gray-900 text-white  ">
                 <Link
                     to="/"
                     className="relative inline-block hover:text-gray-400 hover:bg-gray-800 rounded-md p-5 pt-5 
