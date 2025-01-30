@@ -12,6 +12,7 @@ import DeviceManagement from './pages/deviceManagement';
 import Dashboard from './pages/Dashboard';
 import OSICM  from './pages/osicm';
 import PatchAnalysis from './pages/fileUpload';
+import StaticAnalysis from './pages/staticAnalysis';
 
 function App() {
   const [count, setCount] = useState(0);
@@ -24,6 +25,7 @@ function App() {
         <Route path="/home" element={<Home />} />
         <Route path="/analytics" element={<Analytics />} />
         <Route path="/analytics/patch-analysis" element={<PatchAnalysis />} />
+        <Route path="/analytics/static-analysis" element={<StaticAnalysis/>} />
         <Route path="/reports" element={<Reports />} />
         <Route path="/configurations" element={<Configurations />} />
         <Route path="/inferences" element={<Inferences />} />

@@ -109,14 +109,14 @@ const FileUpload = () => {
         <div className="flex w-full gap-4 justify-end relative pr-10">
           {/* Buttons */}
           <button
-            onClick={() => handleClick("/analysis/dynamic-analysis")}
+            onClick={() => handleClick("/analytics/static-analysis")}
             className="px-5 py-3 text-white rounded-3xl transition bg-red-500 hover:bg-red-600"
           >
             Dynamic Analysis
           </button>
 
           <button
-            onClick={() => handleClick("/analysis/static-analysis")}
+            onClick={() => handleClick("/analytics/static-analysis")}
             className="px-5 py-3 text-white rounded-3xl transition bg-blue-700 hover:bg-blue-800"
           >
             Static Analysis
