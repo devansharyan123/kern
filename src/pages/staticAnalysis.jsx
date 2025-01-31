@@ -1,9 +1,7 @@
-
-
-
 import React, { useState, useEffect } from "react";
 import { FileImage } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { FileIcon, InfoIcon, Upload } from "lucide-react";
 
 const StaticAnalysis = () => {
   // State definitions
@@ -14,6 +12,7 @@ const StaticAnalysis = () => {
   const [error, setError] = useState(null);
   const [isPaused, setIsPaused] = useState(false);
   const [analysisCompleted, setAnalysisCompleted] = useState(false);
+  const [file, setFile] = useState(null);
   const [permissions, setPermissions] = useState({
     verifyHashes: false,
     codeDuplication: false,
@@ -21,7 +20,23 @@ const StaticAnalysis = () => {
     securityStandards: false
   });
 
-  // Default logs
+  const handleFileChange = (e) => {
+    const selectedFile = e.target.files?.[0];
+    if (selectedFile) {
+      setFile(selectedFile);
+      const storedPath = `/uploads/${selectedFile.name}`;
+      setFilePath(storedPath);
+    }
+  };
+
+  const abortAnalysis = () => {
+    setIsPaused(true);
+  };
+
+  const resumeAnalysis = () => {
+    setIsPaused(false);
+  };
+
   const [logs, setLogs] = useState([
     {
       timestamp: "2024-08-26 12:45:49, 657.5305-16598",
@@ -41,7 +56,6 @@ const StaticAnalysis = () => {
   ]);
   const navigate = useNavigate();
 
-  // Image upload handler
   const handleImageUpload = (event) => {
     const file = event.target.files?.[0];
     if (file) {
@@ -50,7 +64,6 @@ const StaticAnalysis = () => {
     }
   };
 
-  // Permission change handler
   const handlePermissionChange = (key) => {
     setPermissions(prev => ({
       ...prev,
@@ -58,7 +71,6 @@ const StaticAnalysis = () => {
     }));
   };
 
-  // Start analysis handler
   const startAnalysis = async () => {
     setIsDynamicAnalysis(true);
     setProgress(0);
@@ -87,17 +99,6 @@ const StaticAnalysis = () => {
     }
   };
 
-  // Abort analysis handler
-  const abortAnalysis = () => {
-    setIsPaused(true);
-  };
-
-  // Resume analysis handler
-  const resumeAnalysis = () => {
-    setIsPaused(false);
-  };
-
-  // Dynamic Analysis View
   if (isDynamicAnalysis) {
     const activePermissions = Object.entries(permissions)
       .filter(([_, value]) => value)
@@ -118,8 +119,7 @@ const StaticAnalysis = () => {
             <div className="text-center">
               <img src="https://res.cloudinary.com/dwwbx27ts/image/upload/v1738242590/Online_report-rafiki_1_zis5mj.jpg" alt="Analysis completed" className="mx-auto mb-4" />
               <h2 className="text-2xl font-semibold mb-4">Patch Analysis completed!</h2>
-              <button className="px-4 py-2 bg-blue-500 text-white rounded-full"
-             >
+              <button className="px-4 py-2 bg-blue-500 text-white rounded-full">
                 View Reports
               </button>
             </div>
@@ -127,11 +127,9 @@ const StaticAnalysis = () => {
         </div>
       );
     }
-    
 
     return (
       <div className="flex flex-col min-h-screen p-6 shadow-lg">
-        {/* Header */}
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-semibold">Static Analysis</h2>
           <div className="flex gap-4">
@@ -143,7 +141,6 @@ const StaticAnalysis = () => {
           </div>
         </div>
 
-        {/* Progress Section */}
         <div className="bg-blue-50 p-6 rounded-lg mb-6">
           <h3 className="text-xl font-semibold mb-4">Static analysis in Progress</h3>
           <div className="flex items-center gap-4 mb-4">
@@ -152,7 +149,6 @@ const StaticAnalysis = () => {
             </div>
           </div>
 
-          {/* Progress Bar */}
           <div className="relative w-full bg-gray-200 rounded-full h-2 mb-4">
             <div
               className="bg-blue-500 h-2 rounded-full transition-all duration-500"
@@ -165,7 +161,6 @@ const StaticAnalysis = () => {
             <div className="text-red-500 mb-4">{error}</div>
           )}
 
-          {/* Control Buttons */}
           <div className="flex justify-end gap-4">
             <button
               className="px-4 py-2 bg-red-400 text-white rounded-full"
@@ -182,7 +177,6 @@ const StaticAnalysis = () => {
           </div>
         </div>
 
-        {/* Permissions Section */}
         <div className="mb-6">
           <h3 className="text-lg font-medium mb-2">Allowed Permission</h3>
           <div className="flex flex-wrap gap-4">
@@ -194,7 +188,6 @@ const StaticAnalysis = () => {
           </div>
         </div>
 
-        {/* Log View */}
         <div className="bg-blue-50 rounded-lg shadow-lg">
           <h3 className="text-lg font-medium p-4 border-b">Live Log View</h3>
           <div className="p-4">
@@ -214,7 +207,6 @@ const StaticAnalysis = () => {
     );
   }
 
-  // Initial View
   return (
     <div className="flex flex-col min-h-screen shadow-lg m-6">
       <div className="mx-6 mt-6 p-10 bg-white shadow-lg rounded-lg">
@@ -222,7 +214,6 @@ const StaticAnalysis = () => {
         <p className="text-sm text-gray-500">Configure how you want to check this patch</p>
 
         <div className="mt-6 space-y-4">
-          {/* File Hash Verification */}
           <label className="flex items-center gap-2 text-gray-700">
             <input
               type="checkbox"
@@ -233,29 +224,33 @@ const StaticAnalysis = () => {
             Verify file and code hashes
           </label>
 
-          {/* Image Upload */}
-          <label
-            htmlFor="image-upload"
-            className="border-2 border-dashed border-blue-400 rounded-lg p-6 flex items-center justify-center gap-3 w-full cursor-pointer hover:bg-blue-50 transition"
-          >
-            {image ? (
-              <img src={image} alt="Uploaded" className="w-40 h-28 object-cover rounded-md" />
-            ) : (
-              <div className="flex items-center gap-2 text-blue-600">
-                <FileImage className="h-6 w-6" />
-                <span>Select Golden Image of patch paoip-123. eesh.patch</span>
-              </div>
+          <div className="flex flex-col items-center shadow-lg justify-center m-5 pb-2 mx-8 rounded-lg flex-grow ">
+            {!file && (
+              <input
+                type="file"
+                className="hidden"
+                id="file-upload"
+                onChange={handleFileChange}
+              />
             )}
-          </label>
-          <input
-            type="file"
-            id="image-upload"
-            className="hidden"
-            onChange={handleImageUpload}
-            accept="image/*"
-          />
 
-          {/* Other Permissions */}
+            <label htmlFor="file-upload" className="w-full">
+              {file ? (
+                <div className="space-y-6 w-full">
+                  <div className="border border-dashed border-blue-400 rounded-lg p-8 flex items-center justify-center gap-3 mx-auto max-w-2xl">
+                    <FileIcon className="h-6 w-6 text-blue-500" />
+                    <span className="text-blue-500 text-lg">{file.name}</span>
+                  </div>
+                </div>
+              ) : (
+                <span className="cursor-pointer w-full border-2 border-dashed border-blue-300 rounded-lg p-4 mx-4 flex flex-col items-center justify-center gap-4 bg-gray-50 hover:bg-gray-100 transition">
+                  <Upload className="h-8 w-5 text-gray-500" />
+                  <p className="text-blue-500">Drag or Upload Patch File</p>
+                </span>
+              )}
+            </label>
+          </div>
+
           <label className="flex items-center gap-2 text-gray-700">
             <input
               type="checkbox"
@@ -287,7 +282,6 @@ const StaticAnalysis = () => {
           </label>
         </div>
 
-        {/* Save Configuration */}
         <div className="mt-6 flex items-center gap-2">
           <input
             type="checkbox"
@@ -302,14 +296,13 @@ const StaticAnalysis = () => {
         </div>
       </div>
 
-      {/* Action Buttons */}
       <div className="mt-10 pt-5 w-full shadow-[0_-5px_10px_rgba(0,0,0,0.1)] flex items-end justify-end">
         <div className="flex w-full gap-4 justify-end items-center relative pr-10">
           <button
             onClick={startAnalysis}
             className="mt-10 px-5 py-3 text-white rounded-3xl transition bg-gradient-to-r from-blue-500 to-indigo-600"
           >
-            Dynamic Analysis
+            Static Analysis
           </button>
         </div>
       </div>

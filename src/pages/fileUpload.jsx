@@ -27,6 +27,7 @@ const FileUpload = () => {
       setShowNotification(true);
       setTimeout(() => setShowNotification(false), 3000);
       return;
+
     }
 
     try {
@@ -43,7 +44,7 @@ const FileUpload = () => {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <div className="flex flex-col items-center shadow-lg justify-center mt-5 pb-2 mx-8 rounded-lg flex-grow">
+      <div className="flex flex-col items-center shadow-lg justify-center m-5 pb-2 mx-8 rounded-lg flex-grow ">
         {!file && (
           <input
             type="file"
@@ -56,7 +57,7 @@ const FileUpload = () => {
         <label htmlFor="file-upload" className="w-full">
           {file ? (
             <div className="space-y-6 w-full">
-              <div className="border border-dashed border-blue-400 rounded-lg p-4 flex items-center justify-center gap-3 mx-auto max-w-2xl">
+              <div className="border border-dashed border-blue-400 rounded-lg p-8 flex items-center justify-center gap-3 mx-auto max-w-2xl">
                 <FileIcon className="h-6 w-6 text-blue-500" />
                 <span className="text-blue-500 text-lg">{file.name}</span>
               </div>
